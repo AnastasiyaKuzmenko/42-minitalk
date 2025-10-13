@@ -33,6 +33,7 @@ void	ft_sig_handler(int signal)
 int	main(int argc, char **argv)
 {
 	int	pid;
+	struct sigaction sa;
 
 	(void)argv;
 	if (argc != 1)
@@ -40,11 +41,16 @@ int	main(int argc, char **argv)
 		return (0);
 	}
 	pid = getpid();
-	ft_printf ("%d\n", pid);
+	ft_printf("%d\n", pid);
+
+	sa.sa_handler = &ft_sig_handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
+
 	while (argc == 1)
 	{
-		signal(SIGUSR1, ft_sig_handler);
-		signal(SIGUSR2, ft_sig_handler);
 		pause();
 	}
 	return (0);
